@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebSocket Test</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #0f0; }
+    pre { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+<h2>WebSocket Live Metrics</h2>
+<pre id="output">Connecting...</pre>
+
+<script>
+  const output = document.getElementById("output");
+
+  const ws = new WebSocket("ws://127.0.0.1:8000/ws/metrics");
+
+  ws.onopen = () => {
+    output.textContent = "WebSocket connected\n\n";
+  };
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    output.textContent += JSON.stringify(data, null, 2) + "\n\n";
+  };
+
+  ws.onclose = () => {
+    output.textContent += "WebSocket closed\n";
+  };
+
+  ws.onerror = (err) => {
+    output.textContent += "WebSocket error\n";
+    console.error(err);
+  };
+</script>
+
+</body>
+</html>
